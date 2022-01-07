@@ -4,8 +4,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 // With JSDoc @type annotations, IDEs can provide config autocompletion
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 (module.exports = {
-    title: 'My Site',
-    tagline: 'Dinosaurs are cool',
+    title: 'Blog & Document',
+    tagline: 'gai-zi',
     url: 'https://gai-zi.github.io',
     baseUrl: '/Website/',
     onBrokenLinks: 'throw',
@@ -22,12 +22,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
                 docs: {
                     sidebarPath: require.resolve('./sidebars.js'),
                     // Please change this to your repo.
-                    editUrl: 'https://github.com/facebook/docusaurus/edit/main/website/',
+                    editUrl: 'https://github.com/gai-zi/Website/',
                 },
                 blog: {
                     showReadingTime: true,
                     // Please change this to your repo.
-                    editUrl: 'https://github.com/facebook/docusaurus/edit/main/website/blog/',
+                    editUrl: 'https://github.com/gai-zi/Website/',
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
@@ -40,7 +40,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
         navbar: {
-            title: 'My Site',
+            title: 'Gaizi',
             logo: {
                 alt: 'My Site Logo',
                 src: 'img/logo.svg',
@@ -53,7 +53,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
                 },
                 { to: '/blog', label: 'Blog', position: 'left' },
                 {
-                    href: 'https://github.com/facebook/docusaurus',
+                    href: 'https://github.com/gai-zi',
                     label: 'GitHub',
                     position: 'right',
                 },
@@ -64,8 +64,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             links: [{
                     title: 'Docs',
                     items: [{
-                        label: 'Tutorial',
-                        to: '/docs/intro',
+                        label: 'Docs',
+                        href: 'https://www.docusaurus.io/zh-CN/',
                     }, ],
                 },
                 {
@@ -92,7 +92,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
                         },
                         {
                             label: 'GitHub',
-                            href: 'https://github.com/facebook/docusaurus',
+                            href: 'https://github.com/gai-zi',
                         },
                     ],
                 },
