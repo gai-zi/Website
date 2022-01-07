@@ -38,6 +38,8 @@ $ yarn run start
 
 ## 发布到Github Pages
 
+<!--truncate-->
+
 ### Git仓库配置
 
 Git新建`Website`仓库，同步本地`Website`文件夹
