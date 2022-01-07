@@ -6,7 +6,7 @@ tags: [Blog, docusaurus, Github Pages]
 
 ---
 
-此教程为傻瓜式搭建Docusaurus个人网站并部署在Github Pages上
+此教程为**傻瓜式**搭建Docusaurus个人网站并部署在Github Pages上
 
 ## 前提准备
 
