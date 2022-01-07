@@ -25,6 +25,9 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
                     editUrl: 'https://github.com/gai-zi/Website/blob/main/Docusaurus/',
                 },
                 blog: {
+                    blogTitle: 'Docusaurus 博客！',
+                    blogDescription: '这是个用 Docusaurus 搭建的博客！',
+                    postsPerPage: 1,
                     showReadingTime: true,
                     // Please change this to your repo.
                     editUrl: 'https://github.com/gai-zi/Website/blob/main/Docusaurus/',
