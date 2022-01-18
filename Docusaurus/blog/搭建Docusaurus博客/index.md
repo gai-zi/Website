@@ -48,7 +48,7 @@ Git新建`Website`仓库，同步本地`Website`文件夹
 
 Settings-Pages-Source改为gh-pages
 
-![](pages source.png)
+![](./pages source.png)
 
 ### 修改配置文件
 
