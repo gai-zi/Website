@@ -6,17 +6,21 @@
 
 项目源代码：[gai-zi/ShooterGame: Aurora Studios (github.com)](https://github.com/gai-zi/ShooterGame)
 
+打包游戏链接：https://share.weiyun.com/Lxd5HSw1
+
 :::
 
-> UE版本：4.26
->
-> “如需要进入编辑器或导出应用查看实现效果，请选择'Highrise'地图查看”
+:::tip
 
-# ----------------------------
+UE版本：4.26
 
-# 《游戏模式》
+“如需要进入编辑器或导出应用查看实现效果，请选择'Highrise'地图”
 
-## 炮台**使用说明**
+:::
+
+## 游戏模式
+
+### 炮台**使用说明**
 
  1、玩家贴近炮台，准星对准炮台，按**E键**进入炮台，再按E键退出炮台继续操控原角色
 
@@ -28,25 +32,25 @@
 
 ![](./src/炮台E.png)
 
-## 题目一
+### 题目一
 
 在场景中生成一个炮台
 
-### 实现效果
+#### 实现效果
 
-创建"BP_Turret"蓝图继承自定义C++类`ATurret`，置于场景中
+创建"BP_Turret"蓝图继承自定义cpp类`ATurret`，置于场景中
 
 ![](./src/场景中炮台.png)
 
 ![](./src/炮台.png)
 
-### 解决办法
+#### 解决办法
 
-新建**C++类 ATurret** 继承自 APawn
+新建**cpp类 ATurret** 继承自 APawn
 
 头文件声明必要的组件和属性，构造函数定义组件的属性
 
-```C++
+```cpp
 class SHOOTERGAME_API ATurret : public APawn
 {
 protected:
@@ -69,7 +73,7 @@ protected:
 }
 ```
 
-BP_Turret蓝图继承此C++类，将炮台的各个mesh、material赋值，填充新的组件，组件列表如下
+BP_Turret蓝图继承此cpp类，将炮台的各个mesh、material赋值，填充新的组件，组件列表如下
 
 ![](./src/炮台组件列表.png)
 
@@ -79,11 +83,11 @@ BP_Turret蓝图继承此C++类，将炮台的各个mesh、material赋值，填�
       - Launcher：发射器，从发射器内发射BP_Missile导弹
       - Our Camera：摄像机组件
 
-## 题目二
+### 题目二
 
 炮台可以按照固定频率向固定方向发射炮弹
 
-### 实现效果
+#### 实现效果
 
 进入炮台后，按鼠标左键能够发射导弹，**间隔时间 1.5s** ；
 
@@ -97,7 +101,7 @@ BP_Turret蓝图继承此C++类，将炮台的各个mesh、material赋值，填�
 
 ![](./src/第三方视角发射导弹.png)
 
-### 解决办法
+#### 解决办法
 
 #### 导弹
 
@@ -119,7 +123,7 @@ BP_Turret蓝图继承此C++类，将炮台的各个mesh、material赋值，填�
 
 Turret.h声明必要的属性和方法
 
-```C++
+```cpp
 //控制发射间隔参数
 bool bCanFire = true;
 float LastFireTime = 0.0f;
@@ -131,13 +135,13 @@ void Fire();
 
 设置鼠标左键按键绑定，绑定Fire()函数
 
-```C++
+```cpp
 PlayerInputComponent->BindAction("Fire",IE_Pressed,this,&ATurret::Fire);
 ```
 
 构造函数获取导弹蓝图BP_Missile
 
-```C++
+```cpp
 static ConstructorHelpers::FClassFinder<AShooterProjectile> ProjectileBP(TEXT("Blueprint'/Game/Blueprints/Weapons/BP_Missile.BP_Missile_C'"));
 if(ProjectileBP.Succeeded())
    ProjectileClass = ProjectileBP.Class;
@@ -147,7 +151,7 @@ Fire()函数内获取当前发射器旋转和坐标，来定义导弹出生位�
 
 如果条件允许，生成导弹
 
-```C++
+```cpp
 void ATurret::Fire()
 {
    if(!bCanFire)  return;
@@ -174,7 +178,7 @@ void ATurret::Fire()
 
 每帧计算当前时间间隔，若超过 1.5s 未发射导弹，将bCanFire置为true，每次发射后在Fire()方法中都会将bCanFire重置为false，重新计时。
 
-```C++
+```cpp
 void ATurret::Tick(float DeltaTime)
 {
    Super::Tick(DeltaTime);
@@ -189,39 +193,39 @@ void ATurret::Tick(float DeltaTime)
 
 实现发射物按固定间隔1.5s发射导弹
 
-## 题目三
+### 题目三
 
 炮弹可以击中角色并产生一定伤害
 
-### 实现效果
+#### 实现效果
 
 导弹击中敌人产生爆炸效果，同时对敌人造成伤害，伤害值置为50，直接击败敌人
 
 ![](./src/炮台击败敌人.png)
 
-### 解决办法
+#### 解决办法
 
 通过基类 ShooterProjectile 方法，在发生碰撞后调用Explode()方法产生爆炸效果，并且调用`ApplyRadialDamage`方法造成伤害
 
-```c++
+```cpp
 UGameplayStatics::ApplyRadialDamage(this, WeaponConfig.ExplosionDamage, NudgedImpactLocation, WeaponConfig.ExplosionRadius, WeaponConfig.DamageType, TArray<AActor*>(), this, MyController.Get());
 ```
 
-## 题目四
+### 题目四
 
 玩家可以让角色操控炮台调整左右方向，同时只能一个角色操控
 
-### 实现效果
+#### 实现效果
 
 能够让玩家操控炮台并左右方向旋转发射器，同时只能有一个角色进入炮台
 
-### 解决办法
+#### 解决办法
 
 #### 角色控制炮台
 
 ATurret类中定义`CurrentShooterCharacter`，用于存放当前控制自己的角色实例
 
-```C++
+```cpp
 //当前控制此炮台的角色
 UPROPERTY(BlueprintReadWrite)
 AShooterCharacter* CurrentShooterCharacter;
@@ -252,7 +256,7 @@ Trace From Camera 方法中发射射线，并且检测是否碰撞的是炮台�
 
 在Turret.h中声明TurnRight()方法，将其与鼠标X轴映射绑定，方法代码如下
 
-```C++
+```cpp
 void ATurret::TurnRight(float Value)
 {
    //沿着Z轴旋转roll
@@ -266,11 +270,11 @@ void ATurret::TurnRight(float Value)
 
 实现左右旋转炮台
 
-## 题目五
+### 题目五
 
 玩家操控炮台击中敌方，导致死亡，玩家可以获得双倍积分
 
-### 实现效果
+#### 实现效果
 
 枪械击杀敌人得分：2分
 
@@ -280,46 +284,42 @@ void ATurret::TurnRight(float Value)
 
 ![](./src/炮台击杀敌人得分.png)
 
-### 解决办法
+####  解决办法
 
 在`AShooterCharacter::Die(...)`方法中添加判断，根据Tag判断是否造成伤害的物体为Missile
 
-```C++
+```cpp
 //增加积分并通知死亡事件发生
 if(DamageCauser->Tags.Contains(FName("Missile")))
 ```
 
 如果传入的参数判定为导弹击杀，则将击杀分数乘2
 
-```C++
+```cpp
 KillerPlayerState->ScoreKill(VictimPlayerState, KillScore * 2); 
 ```
 
 实现操控炮台击败敌方，当前玩家可以获得双倍积分
 
----
+## UMG界面
 
-# ----------------------------
-
-# 《UMG界面》
-
-## 界面操作
+### 界面操作
 
 - 按X键呼出3D UI，镜头指向按钮，鼠标右键能够点击3D按钮
 
 - P或Esc键呼出Option菜单
 
-## 题目一
+### 题目一
 
 添加一个击杀时醒目UI(屏幕中上方，注意Anchor和Alignment)
 
-### 实现效果
+#### 实现效果
 
 在玩家击杀一个敌方单位后，屏幕中上方显示击杀图标
 
 ![](./src/击杀图标.png)
 
-### 解决办法
+#### 解决办法
 
 创建一个继承自UuserWidget的蓝图名为`BP_KillWidget`；
 
@@ -336,7 +336,7 @@ KillerPlayerState->ScoreKill(VictimPlayerState, KillScore * 2);
 
 在**ShooterHUD.h**中声明蓝图类`KillWidgetClass`
 
-```c++
+```cpp
 /** 击杀后客户端显示的Widget*/
 TSubclassOf<UUserWidget> KillWidgetClass;
 UUserWidget* KillWidget;
@@ -344,7 +344,7 @@ UUserWidget* KillWidget;
 
 在**ShooterHUD.cpp**的构造函数中使用`ConstructorHelpers::FclassFinder`获取到蓝图BP_KillWidget
 
-```c++
+```cpp
 AShooterHUD::AShooterHUD(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	...
@@ -360,7 +360,7 @@ AShooterHUD::AShooterHUD(const FObjectInitializer& ObjectInitializer) : Super(Ob
 
 在击败敌人后，会调用`AShooterHUD::DrawRecentlyKilledPlayer()`方法，在其中进行保护判断，如果存在`KillWidget`实例则remove，如果不存在就生成实例，将其添加进ViewPort．
 
-```C++
+```cpp
 //创建KillWidget
 if(KillWidget)
 {
@@ -382,17 +382,17 @@ if(KillWidgetClass && !KillWidget)
 
 ---
 
-## 题目二
+### 题目二
 
 为击杀UI添加动画(Fadeln&Out/缩放等均可)
 
-### 实现效果
+#### 实现效果
 
 题目一中创建的UI在生成后能够FadeOut的效果后消失
 
 ![](./src/FadeOut效果图.png)
 
-### 解决办法
+#### 解决办法
 
 在`BP_KLillWidget`蓝图中为`Kill_Image`创建Animation，命为"FadeOut_Animation"，添加2个关键帧，定义图片的Alpha值
 
@@ -407,11 +407,11 @@ if(KillWidgetClass && !KillWidget)
 
 ---
 
-## 题目三
+### 题目三
 
 左上角显示游戏帧数，选项菜单里增加一个选项，作为控制是否显示游戏帧数的开关 
 
-### 实现效果
+#### 实现效果
 
 在Option选项中添加控制FPS显示的开关，开启后能够在屏幕左上角显示帧数；
 
@@ -423,11 +423,11 @@ if(KillWidgetClass && !KillWidget)
 
 ![](./src/FPS_Off.png)
 
-### 解决办法
+#### 解决办法
 
 在**ShooterOptions.h**中声明确定FPS开关的属性和方法
 
-```C++
+```cpp
 /** FPS显示选项*/
 TSharedPtr<FShooterMenuItem> FPSOption;	
 
@@ -440,13 +440,13 @@ void ToggleFPS(TSharedPtr<FShooterMenuItem> MenuItem, int32 MultiOptionIndex);
 
 在`FShooterOptions::Construct()`方法中，在OptionItem中添加一项FPSOption，将ToggleFPS方法绑定到`FOnOptionChanged`代理对象上，当选项被玩家更改后就会调用`SShooterMenuWidget::ChangeOption(int32 MoveBy)`中的`OnOptionChanged.ExecuteIfBound(...)`执行函数`ToggleFPS`．
 
-```C++
+```cpp
 FPSOption = MenuHelper::AddMenuOptionSP(OptionsItem, LOCTEXT("fps", "FPS"), OnOffList, this, &FShooterOptions::ToggleFPS);
 ```
 
 编写实际运行的**ToggleFPS()**函数，将`bFPSOpt`同步到该客户端的PlayerController的`bFPSEnabled`属性上。其间夹杂`bFPSOpt`、`FPSOption`的默认设置和Get、Set方法的调用不过多赘述．
 
-```C++
+```cpp
 void FShooterOptions::ToggleFPS(TSharedPtr<FShooterMenuItem> MenuItem, int32 MultiOptionIndex)
 {
    bFPSOpt = MultiOptionIndex > 0 ? true : false;
@@ -473,7 +473,7 @@ void FShooterOptions::ToggleFPS(TSharedPtr<FShooterMenuItem> MenuItem, int32 Mul
 
 和题目二使用同样方法获取BP_FPSWidget蓝图资源，在`ShooterHUD.cpp`中创建实例，在DrawHUD()方法中根据当前`AShooterPlayerController::bFPSEnabled`正确生成Widget．
 
-```C++
+```cpp
 //显示FPS
 if(!FPSWidget)
 {
@@ -491,11 +491,11 @@ if(!FPSWidget->IsInViewport() && MyPC->bFPSEnabled == true)
 
 ---
 
-## 题目四
+### 题目四
 
 将局内的游戏菜单升级为3D UI (WidgetInteractionComponent) ，当菜单显示时，根据玩家位置始终显示在玩家侧前方，且可以正常点击
 
-### 实现效果
+#### 实现效果
 
 按X键呼出3D UI，并且切换为TPP视角，镜头指向按钮，鼠标右键能够点击3D按钮
 
@@ -513,7 +513,7 @@ if(!FPSWidget->IsInViewport() && MyPC->bFPSEnabled == true)
 
 （因为原项目UI界面都用HUD实现，时间不够将其全部重写，故实现如上所述的3D UI，未改变升级局内UI）
 
-### 解决办法
+#### 解决办法
 
 1. 创建一个**widget蓝图**名为 **DanceOption**
 
@@ -543,15 +543,13 @@ if(!FPSWidget->IsInViewport() && MyPC->bFPSEnabled == true)
 
 ---
 
-# ----------------------------
+## 基本物理
 
-# 《基本物理》
-
-## 题目一
+### 题目一
 
 不同的地面有不同的摩擦力
 
-### 实现效果
+#### 实现效果
 
 1. 场景内的floor_5_Glass的物理材质被重载为自定义的"M_Glass"
 
@@ -569,7 +567,7 @@ if(!FPSWidget->IsInViewport() && MyPC->bFPSEnabled == true)
 
    ![](./src/结束下落.png)
 
-### 解决办法
+#### 解决办法
 
 自定义的M_Glass的属性如下:
 
@@ -589,11 +587,11 @@ if(!FPSWidget->IsInViewport() && MyPC->bFPSEnabled == true)
 
    - 右边草地附着M_glass物理材质，摩擦力为0，能够下滑且速度很快
 
-## 题目二
+### 题目二
 
 ​	步枪子弹击中垃圾桶，可以把垃圾桶打飞
 
-### 实现效果
+#### 实现效果
 
 步枪子弹射击垃圾桶，垃圾桶根据不同的受击位置和方向，对应产生被击打的物理效果
 
@@ -601,7 +599,7 @@ if(!FPSWidget->IsInViewport() && MyPC->bFPSEnabled == true)
 
 ![](./src/射击垃圾桶.png)
 
-### 解决办法
+#### 解决办法
 
 设置垃圾桶物体的一些基本要素
 
@@ -613,13 +611,13 @@ if(!FPSWidget->IsInViewport() && MyPC->bFPSEnabled == true)
 
 设置组播方法`ProcessTrash()`，处理垃圾桶被子弹击中的效果
 
-```C++
+```cpp
 /** 对垃圾桶做出子弹碰撞反应 */
 UFUNCTION(UnReliable,NetMulticast)
 void ProcessTrash(const FHitResult& Impact, const FVector& ShootDir);
 ```
 
-```C++
+```cpp
 void AShooterWeapon_Instant::ProcessTrash(const FHitResult& Impact,const FVector& ShootDir)
 {
 	Impact.GetComponent()->AddImpulseAtLocation(ShootDir * 5000.0f, Impact.ImpactPoint);
@@ -628,7 +626,7 @@ void AShooterWeapon_Instant::ProcessTrash(const FHitResult& Impact,const FVector
 
 `AShooterWeapon_Instant::ProcessInstantHit_Confirmed(...)`函数处理子弹射击产生的效果，在其中根据射线返回值判断击中物体的Tag是否包含"Trash"，如果包含则将 HitResult引用和传递方向 ShootDir 传递进方法，并执行
 
-```C++
+```cpp
 void AShooterWeapon_Instant::ProcessInstantHit_Confirmed(const FHitResult& Impact, const FVector& Origin, const FVector& ShootDir, int32 RandomSeed, float ReticleSpread)
 {
     ...
@@ -647,11 +645,11 @@ void AShooterWeapon_Instant::ProcessInstantHit_Confirmed(const FHitResult& Impac
 
 ---
 
-## 题目三
+### 题目三
 
 发射器发射的炮弹，呈抛物线飞行，碰到障碍可以反弹，碰到敌人或者倒计时结束则爆炸
 
-### 实现效果
+#### 实现效果
 
 角色的炮弹武器，子弹实例能够呈抛物线飞行，倒计时结束时发生爆炸
 
@@ -659,11 +657,11 @@ void AShooterWeapon_Instant::ProcessInstantHit_Confirmed(const FHitResult& Impac
 
 ![](./src/炸弹弹射.png)
 
-### 解决办法
+#### 解决办法
 
 发射器炮弹蓝图继承 AShooterProjectile 类，在其构造函数中修改属性和调参：启用弹力、设置弹性和设置重力
 
-```c++
+```cpp
 AShooterProjectile::AShooterProjectile(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
     ...
@@ -678,23 +676,23 @@ AShooterProjectile::AShooterProjectile(const FObjectInitializer& ObjectInitializ
 
 ---
 
-## 题目四
+### 题目四
 
 角色面对墙壁时可以施展蹬墙二段跳，不用表现出蹬墙的动画，只需要满足面对墙壁足够近才能施展这个条件
 
-### 实现效果
+#### 实现效果
 
 玩家能够在贴近墙体时，能够施展二段跳，且第二跳高度更高
 
 ![](./src/二段跳.png)
 
-### 解决办法
+#### 解决办法
 
 玩家类 AShooterCharacter 继承自 ACharacter类，ACharacter类中存在 JumpMaxCount 属性，表示最大跳跃次数
 
-在AShooterCharacter类构造函数中将 `JumpMaxCount `置为2，使角色能够跳跃2次；<br>`bCanDoubleJump`用来判断是否可以进行二段跳
+在AShooterCharacter类构造函数中将 `JumpMaxCount `置为2，使角色能够跳跃2次；`bCanDoubleJump`用来判断是否可以进行二段跳
 
-```c++
+```cpp
 /** 是否能进行二段跳 */
 UPROPERTY(VisibleDefaultsOnly, Category = Pawn)
 bool bCanDoubleJump;
@@ -712,7 +710,7 @@ AShooterCharacter::AShooterCharacter(const FObjectInitializer& ObjectInitializer
 
 定义`OnHit`函数，将其绑定在多播委托变量OnComponentHit上，根据Tag判断角色的胶囊体是否碰撞了墙体,如果碰撞墙体并且现在进行了第一次跳跃，`bCanDoubleJump = true`，角色可以二段跳
 
-```c++
+```cpp
 /*当角色碰撞物体时会调用的函数。*/
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
@@ -738,7 +736,7 @@ void AShooterCharacter::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 
 在`OnStartJump()`和`OnStopJump()`方法中定义二段跳的触发条件，并且在第二跳发生时将Z轴速度提高，停止跳跃时将`JumpZVelocity`重置为720.0f
 
-```c++
+```cpp
 void AShooterCharacter::OnStartJump()
 {
 	AShooterPlayerController* MyPC = Cast<AShooterPlayerController>(Controller);
@@ -769,11 +767,11 @@ void AShooterCharacter::OnStopJump()
 
 ---
 
-## 题目五
+### 题目五
 
 步枪子弹可以穿过一定厚度的墙，伤害随穿过障碍的厚度递减
 
-### 实现效果
+#### 实现效果
 
 子弹可以穿墙打击敌人，子弹穿透墙体的伤害会根据在墙体中的移动距离进行衰减
 
@@ -783,11 +781,11 @@ void AShooterCharacter::OnStopJump()
 
 ![](F:\2021-2023游戏开发资源\2021腾讯游戏高校公开课\课程作业\Finished_基本物理-11月7日\src\子弹伤害衰减.png)
 
-### 解决办法
+#### 解决办法
 
 在 ShooterWeapon_Instant.h 中声明需要的属性和方法
 
-```c++
+```cpp
 class AShooterWeapon_Instant : public AShooterWeapon
 {
     ...
@@ -831,7 +829,7 @@ FHitResult HavePawnBackWall(const FHitResult& Impact, const FVector& Start, cons
 
 将伤害衰减后存入`AfterDecreaseDamage`，为负则不行进伤害判定
 
-```c++
+```cpp
 FHitResult AShooterWeapon_Instant::HavePawnBackWall(const FHitResult& Impact, const FVector& Start, const FVector& End, const FVector& ShootDir)
 {
 	TArray<FHitResult> Hits;
@@ -880,7 +878,7 @@ GetWorld(),Start,End,UEngineTypes::ConvertToTraceType(ECC_GameTraceChannel4),tru
 
 `AShooterWeapon_Instant::DealDamage`中判断是否进行伤害递减，进行伤害最终传入
 
-```c++
+```cpp
 void AShooterWeapon_Instant::DealDamage(const FHitResult& Impact, const FVector& ShootDir)
 {
    FPointDamageEvent PointDmg;
@@ -903,7 +901,7 @@ void AShooterWeapon_Instant::DealDamage(const FHitResult& Impact, const FVector&
 - 如果两个Hit值相等，则没发射穿墙事件
 - 否则发生穿墙事件，在原Impact击中位置生成打击效果
 
-```c++
+```cpp
 const FHitResult Impact = WeaponTrace(StartTrace, EndTrace);
 /*查询墙后是否有pawn*/
 FHitResult FinalImpact = HavePawnBackWall(Impact,StartTrace,EndTrace,ShootDir);
@@ -921,11 +919,11 @@ if(Impact.IsValidBlockingHit() && FinalImpact.IsValidBlockingHit())
 
 实现子弹穿墙打击敌人，子弹穿透墙体的伤害能够根据在墙体中移动的距离进行衰减，墙上仍产生弹孔
 
-# ----------------------------
+---
 
-# 《骨骼动画》
+## 骨骼动画
 
-## 操作说明
+### 操作说明
 
 1、Ctrl+1/2/3播放三种不同的舞蹈动画
 
@@ -933,11 +931,11 @@ if(Impact.IsValidBlockingHit() && FinalImpact.IsValidBlockingHit())
 
 3、按Z能够使角色蹲下
 
-## 题目一
+### 题目一
 
 按键（ctrl+数字键）可以触发角色不同的表演动作
 
-### 实现效果
+#### 实现效果
 
 Ctrl+1/2/3播放三种不同的舞蹈动画，并自动切换第三人称
 
@@ -947,15 +945,15 @@ X键呼出3D UI，瞄准按钮并点按鼠标右键，能够在单机模式下�
 
 ![](./src/3DUI.png)
 
-### 解决办法
+#### 解决办法
 
-#### 修复原项目bug
+##### 修复原项目bug
 
 先修复了原项目出现的bug，第三人称可视第一人称手臂mesh、无法看到第三人称枪械
 
 AShooterCharacter::UpdatePawnMeshes()中添加逻辑判定，在不同模式下，隐藏不需要的人物和枪械mesh
 
-```c++
+```cpp
 void AShooterCharacter::UpdatePawnMeshes()
 {
 	bool const bFirstPerson = IsFirstPerson();
@@ -983,7 +981,7 @@ void AShooterCharacter::UpdatePawnMeshes()
 
 又通过添加SprinArm和调节一下组件层级关系，修复了第三人称视角怪异的bug
 
-#### 动画素材格式转换
+##### 动画素材格式转换
 
 使用Mixamo_Converter软件，获取体重提供的角色3D模型，将其导入到Mixamo网站
 
@@ -993,7 +991,7 @@ void AShooterCharacter::UpdatePawnMeshes()
 
 ![](./src/小白人动画.png)
 
-#### 骨骼重定向
+##### 骨骼重定向
 
 重定向原项目人物骨骼，对比两个骨骼位置，全部手动添加并调试
 
@@ -1003,7 +1001,7 @@ void AShooterCharacter::UpdatePawnMeshes()
 
 再将骨骼节点的 Translation Retarget 选项慢慢调试：为动画或骨骼
 
-![](./src/Translation Retarget.png)
+![](./src/Translation_Retarget.png)
 
 经过漫长的调参，尽量保证重定向后骨骼动画不至于拉伸严重
 
@@ -1015,11 +1013,11 @@ void AShooterCharacter::UpdatePawnMeshes()
 
 将动画资源转为Montage，并且Slot设置为Full Body，并且改为根骨骼移动(防止mesh和collision不在一个位置)
 
-#### 设置输入、播放动画
+##### 设置输入、播放动画
 
-C++中使蓝图能够调用`TogglePerspective()`，从而调节TPP和FPP视角；
+cpp中使蓝图能够调用`TogglePerspective()`，从而调节TPP和FPP视角；
 
-```c++
+```cpp
 UFUNCTION(BlueprintCallable)
 void TogglePerspective();
 
@@ -1041,17 +1039,17 @@ Dance方法实现如下，设置必要的状态参数，并且在播放动画时
 
 实现了按键播放人物动画，3D UI 启用动画在UMG中有详细解释
 
-## 题目二
+### 题目二
 
 主角静止无输入5秒之后进入idle休闲动画，如耸肩、挠头等
 
-### 实现效果
+#### 实现效果
 
 主角静止无输入5秒之后进入耸肩动画，同一无操作间隔内只进行一次，且不会与其他动画冲突
 
 ![](./src/耸肩.png)
 
-### 解决办法
+#### 解决办法
 
 同题目一步骤制作蒙太奇**耸肩动画**
 
@@ -1064,11 +1062,11 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ![](./src/耸肩蓝图.png)
 
-## 题目三
+### 题目三
 
 蹲姿及其配套的基础移动动作
 
-### 实现效果
+#### 实现效果
 
 （动画重定向，手臂位置拉伸太大，功能都已实现，动画不适配的bug还未能修复😭）
 
@@ -1076,7 +1074,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ![](./src/蹲姿.png)
 
-### 解决办法
+#### 解决办法
 
 人物移动组件Character movement 中勾选**can crouch** ✔️
 
@@ -1104,15 +1102,15 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 实现按Z轴切换蹲姿和站立，不同方向的混合移动动画
 
-## 题目四
+### 题目四
 
 停步动作，并优化其衔接表现
 
-### 实现效果
+#### 实现效果
 
 添加跑动结束停步动画
 
-### 解决办法
+#### 解决办法
 
 导入两只脚的停步动画
 
@@ -1132,11 +1130,11 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 （导入的动画和跑步动画不适配，表现比较僵硬）
 
-## 题目五
+### 题目五
 
 脚部的IK功能
 
-### 实现效果
+#### 实现效果
 
 实现**脚步IK功能**，人物踏入不同高度的地面脚部会放置在不同高度（稍微有些内八）
 
@@ -1148,7 +1146,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ![](./src/脚步旋转.png)
 
-### 解决办法
+#### 解决办法
 
 在角色左右脚骨骼添加插槽名为"`LeftFootSocket`"、"`RightFootSocket`"，为了后续获得此点的坐标信息；
 
@@ -1166,7 +1164,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 角色蓝图中 PlayerPawn 中声明并定义`IK Foot Trace`方法，输入插槽名称和射线长度`TraceDistance`，世界坐标下向脚步下方插槽位置发射一条垂直射线，并返回`IKOffset`(脚部偏移量)
 
-![](./src/IK Foot Trace.png)
+![](./src/IK_Foot_Trace.png)
 
 角色Event Graph中， Event Tick 调用`IK Foot Trace`方法，将返回值Lerp后存入`IKoffsetRightFoot`、`IKoffsetLeftFoot`(插值左右脚实际该偏移的长度)中，使值平滑变动。 
 
@@ -1174,13 +1172,13 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 获得了上述变量值，进而在动画蓝图中使用两个**Two Bone IK**节点，设置两个节点的`IKBone`、`Effector`、`Joint Target`，确保坐标空间为`Bone Space`,图中展示右脚部分的设置，左脚同理
 
-![](./src/Two Bone IK.png)
+![](./src/Two_Bone_IK.png)
 
-![](./src/Two Bone IK设置.png)
+![](./src/Two_Bone_IK设置.png)
 
 在动画蓝图中定义`RightFootEffectorLocation`、`LeftFootEffectorLocation`，根据之前求出的左右脚偏移量，将其作为X值，赋值`RightFootEffectorLocation`、`LeftFootEffectorLocation`，根据左右脚的坐标系不同，确定两个变量的X值正负（因为根据的坐标系是基于左右脚的，脚部竖直向上位移的时候，变化的是Effector Location—X轴，并且左右脚还是相反的）
 
-![](./src/获得Effector Location.png)
+![](./src/获得Effector_Location.png)
 
 ---
 
@@ -1190,7 +1188,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 定义`Mesh Offset Z`变量，其值通过左右脚偏移量做差取绝对值负数获得，从而确定整体骨骼向下的偏移量，使用Transform(Modify) Bone节点将整体骨骼位置拉低，节点控制根骨骼在世界坐标的偏移。
 
-![](./src/Transform Bone.png)
+![](./src/Transform_Bone.png)
 
 拉低根骨骼的同时，人物上方会空出碰撞区域，同时根据`Mesh Offset Z`将碰撞体半场高修改解决问题
 
@@ -1224,21 +1222,21 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ![](./src/整体动画蓝图.png)
 
-# ----------------------------
+---
 
-# 《渲染基础》
+## 渲染基础
 
-## 题目一
+### 题目一
 
 使用标准材质，把场景地面修改为砖块或木板等均可
 
-### 实现效果
+#### 实现效果
 
 将地图中一块地面的材质修改为橡木板材质
 
 ![](./src/橡木地板.png)
 
-### 解决办法
+#### 解决办法
 
 将此地板的材质—Element2替换为初学者内容包的M_Wood_Oak
 
@@ -1246,15 +1244,15 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ---
 
-## 题目二
+### 题目二
 
 使用标准材质，把枪械修改为金属
 
-### 实现效果
+#### 实现效果
 
 ![](./src/金属武器.png)
 
-### 解决办法
+#### 解决办法
 
 - 将武器的主体材质替换为标准材质`M_Metal_Burnished_Steel`金属材质;
 
@@ -1262,11 +1260,11 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ![](./src/武器材质.png)
 
-## 题目三
+### 题目三
 
 添加一种后处理效果
 
-### 实现效果
+#### 实现效果
 
 自定义玻璃材质，修改静态网格体 MainHall_WallGrass_05 的材质，实现屏幕空间反射的后处理效果
 
@@ -1274,7 +1272,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 
 
-### 解决办法
+#### 解决办法
 
 新建材质Glass，设置参数基础颜色、metallic和粗糙度
 
@@ -1290,11 +1288,11 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ![](./src/屏幕空间反射材质球.png)
 
-## 题目四
+### 题目四
 
 使用材质编辑器，添加至少一种自定义材质，比如枪械上的UV动画
 
-### 实现效果
+#### 实现效果
 
 1. 将两种枪械的瞄准镜部分添加了UV动画，使枪械表面产生流动的效果
 
@@ -1310,7 +1308,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 
 
-### 解决办法
+#### 解决办法
 
 1. 在武器材质蓝图中，给枪械瞄准镜部分纹理添加Panner节点，速度X设置为0.1，从而实现流动效果
 
@@ -1339,17 +1337,17 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
    最后将材质添加到Cube上，Cube囊括玩家出生地，当有玩家穿过能够高亮轮廓，外面的子弹无法打进出生地，实现一种出生保护机制。
 
-## 题目五
+### 题目五
 
 结合游戏玩法丰富技能特效，比如开火、击中或爆炸特效等
 
-### 实现效果
+#### 实现效果
 
 被击杀的玩家能够不是直接消失，而是先实现消融的材质特效再销毁
 
 ![](./src/Pawn溶解.png)
 
-### 解决办法
+#### 解决办法
 
 在人物材质的Blend Mode置为Masked，修改并赋值`EmissiveColor`、`OpacityMask`节点，将Value参数控制溶解程度，编写材质函数Sine_remapped、MF_Appearacne和材质蓝图，调参实现溶解效果
 
@@ -1367,7 +1365,7 @@ MF_Appearacne材质函数
 
 在ShooterCharacter.h中声明函数`LetPawnDissolve()`，使其控制溶解速度
 
-```C++
+```cpp
 public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void LetPawnDissolve();
@@ -1377,9 +1375,9 @@ public:
 
 ![](./src/EventLetPawnDissolve.png)
 
-人物死亡时调用OnDeath()函数，所以在C++ `AShooterCharacter::onDeath()`函数中调用蓝图方法LetPawnDissolve()
+人物死亡时调用OnDeath()函数，所以在cpp `AShooterCharacter::onDeath()`函数中调用蓝图方法LetPawnDissolve()
 
-```C++
+```cpp
 void AShooterCharacter::OnDeath(...){
 	...
 	LetPawnDissolve();
@@ -1391,31 +1389,31 @@ void AShooterCharacter::OnDeath(...){
 
 ![](./src/Pawn溶解2.png)
 
-# ----------------------------
+---
 
-# 《AI技术介绍》
+## AI技术介绍
 
-## 题目一
+### 题目一
 
 通过设置NavMeshBoundsVolume生成地图的导航网格
 
-### 实现效果
+#### 实现效果
 
 通过构建网格体边界体积（Navigation Mesh Bounds Volume），实现地图的导航网格
 
 ![](./src/导航网格.png)
 
-### 解决办法
+#### 解决办法
 
 添加**寻路网格体边界体积（Navigation Mesh Bounds Volume）**
 
 解决寻路网格体在高度上绘制出现偏差问题，调整绘制寻路网格体的高度偏移将`RecastNavMesh-Common ———— Draw offset `设置为10.0f
 
-## 题目二
+### 题目二
 
 基于生成的导航网格让角色从两点间自动寻路
 
-### 实现效果
+#### 实现效果
 
 AI角色能够在两点间自动寻路，在到达一个目标点后延迟3秒
 
@@ -1423,17 +1421,17 @@ AI角色能够在两点间自动寻路，在到达一个目标点后延迟3秒
 
 ![](./src/自动寻路B.png)
 
-### 解决办法
+#### 解决办法
 
 在BotPawn的事件蓝图中添加MoveToA、MoveToB自定义事件，使用`AI Move To`节点，互相调用事件，实现AI角色从A坐标和B坐标基于导航网格来回移动寻路。
 
 ![](./src/自动寻路蓝图.png)
 
-## 题目三
+### 题目三
 
 在UE4中创建黑板，行为树以及行为树装饰器
 
-### 实现效果
+#### 实现效果
 
 为AI角色创建黑板、行为树及装饰器等等
 
@@ -1455,31 +1453,31 @@ AI角色主要有三种行为：
 
 ![](./src/黑板总览.png)
 
-### 解决办法
+#### 解决办法
 
 后续题目将会相应部分的实现进行解释
 
-## 题目四
+### 题目四
 
 使用行为树的基本节点（选择器、序列节点、平行节点等）以及角色移动组件实现NPC追逐玩家的任务
 
-### 实现效果
+#### 实现效果
 
 AI角色在感知并发现敌人后，能够对发现目标进行追逐并攻击
 
 ![](./src/追逐玩家.png)
 
-### 解决办法
+#### 解决办法
 
 由根连接一个Selector，其上挂载`BotSearchEnemyLOS`和`Shoot An Enemy`两个服务
 
 ![](./src/行为树根.png)
 
-- BotSearchEnemyLOS服务：间隔0.5s，调用ShooterAIController中的C++方法，找到距离最近的Enemy并且给黑板键`Enemy`赋值，将其设置为当前目标
+- BotSearchEnemyLOS服务：间隔0.5s，调用ShooterAIController中的cpp方法，找到距离最近的Enemy并且给黑板键`Enemy`赋值，将其设置为当前目标
 
 - BotShooeEnemy服务：调用`AShooterAIController::ShootEnemy()`，根据黑板健`Enemy`、敌人是否存活、当前弹药值等条件判断是否能够进行射击，并且赋值`bCanShoot`变量，间隔0.5s发射子弹
 
-  ```C++
+  ```cpp
   void AShooterAIController::ShootEnemy()
   {
   	...
@@ -1511,11 +1509,11 @@ Move To Enemy 任务**跟随**并攻击玩家，直至玩家死亡。
 
 ![](./src/向敌人移动.png)
 
-## 题目五
+### 题目五
 
 基于行为树和AI感知组件实现随机巡逻任务
 
-### 实现效果
+#### 实现效果
 
 (原项目只要地图中存在玩家，就会自动寻路找到玩家并攻击)
 
@@ -1523,7 +1521,7 @@ AI角色在没有感知到敌人时，进行随机巡逻，当视线内出现敌
 
 ![](./src/随机巡逻.png)
 
-### 解决办法
+#### 解决办法
 
 行为树中添加新的序列用于随机巡逻，添加两个**装饰器**(继承于BT装饰器蓝图基础)
 
