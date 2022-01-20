@@ -1,3 +1,10 @@
+---
+slug: ShooterGame说明文档
+title: ShooterGame说明文档
+authors: gaizi
+tags: [UE4, C++, Aurora Studios]
+---
+
 # ShooterGame说明文档
 
 :::info
