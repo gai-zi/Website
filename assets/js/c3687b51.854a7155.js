@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocusaurus=self.webpackChunkdocusaurus||[]).push([[51],{1148:function(s){s.exports=JSON.parse('{"allTagsPath":"/Website/blog/tags","slug":"/Website/blog/tags/aurora-studios","name":"Aurora Studios","count":1,"permalink":"/Website/blog/tags/aurora-studios"}')}}]);
