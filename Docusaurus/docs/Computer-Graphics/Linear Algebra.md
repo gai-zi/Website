@@ -77,7 +77,7 @@ component-wise multiplication, then adding up
 
 Properties :
 
-![](./src/CrossProductproperties.png)C
+![](./src/CrossProductproperties.png)
 
 #### Cross Product in Graphics
 
@@ -100,6 +100,12 @@ Properties :
 ### Matrix-Multiplication
 
 **保证A矩阵的列数=B矩阵的行数**： $(M \times N)(N \times P) = (M \times P)$
+
+[矩阵乘法](https://zhuanlan.zhihu.com/p/158776486)
+$$
+(AB)_{ij}=\Sigma_{k=1}^pa_{ik}b{kj}=a_{i1}+b_{1j}+...+a_{ip}b_{pj}
+$$
+![](./src/矩阵乘法.png)
 
 - 无交换律
 - $A(BC)=(AB)C$
