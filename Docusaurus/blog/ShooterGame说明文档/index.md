@@ -39,7 +39,7 @@ UE版本：4.26
 
 ![](./src/炮台E.png)
 
-### 题目一
+### 功能一
 
 在场景中生成一个炮台
 
@@ -90,7 +90,7 @@ BP_Turret蓝图继承此cpp类，将炮台的各个mesh、material赋值，填�
       - Launcher：发射器，从发射器内发射BP_Missile导弹
       - Our Camera：摄像机组件
 
-### 题目二
+### 功能二
 
 炮台可以按照固定频率向固定方向发射炮弹
 
@@ -200,7 +200,7 @@ void ATurret::Tick(float DeltaTime)
 
 实现发射物按固定间隔1.5s发射导弹
 
-### 题目三
+### 功能三
 
 炮弹可以击中角色并产生一定伤害
 
@@ -218,7 +218,7 @@ void ATurret::Tick(float DeltaTime)
 UGameplayStatics::ApplyRadialDamage(this, WeaponConfig.ExplosionDamage, NudgedImpactLocation, WeaponConfig.ExplosionRadius, WeaponConfig.DamageType, TArray<AActor*>(), this, MyController.Get());
 ```
 
-### 题目四
+### 功能四
 
 玩家可以让角色操控炮台调整左右方向，同时只能一个角色操控
 
@@ -277,7 +277,7 @@ void ATurret::TurnRight(float Value)
 
 实现左右旋转炮台
 
-### 题目五
+### 功能五
 
 玩家操控炮台击中敌方，导致死亡，玩家可以获得双倍积分
 
@@ -316,7 +316,7 @@ KillerPlayerState->ScoreKill(VictimPlayerState, KillScore * 2);
 
 - P或Esc键呼出Option菜单
 
-### 题目一
+### 功能一
 
 添加一个击杀时醒目UI(屏幕中上方，注意Anchor和Alignment)
 
@@ -389,13 +389,13 @@ if(KillWidgetClass && !KillWidget)
 
 ---
 
-### 题目二
+### 功能二
 
 为击杀UI添加动画(Fadeln&Out/缩放等均可)
 
 #### 实现效果
 
-题目一中创建的UI在生成后能够FadeOut的效果后消失
+功能一中创建的UI在生成后能够FadeOut的效果后消失
 
 ![](./src/FadeOut效果图.png)
 
@@ -414,7 +414,7 @@ if(KillWidgetClass && !KillWidget)
 
 ---
 
-### 题目三
+### 功能三
 
 左上角显示游戏帧数，选项菜单里增加一个选项，作为控制是否显示游戏帧数的开关 
 
@@ -478,7 +478,7 @@ void FShooterOptions::ToggleFPS(TSharedPtr<FShooterMenuItem> MenuItem, int32 Mul
 
 ![](./src/BP_FPSWidget.png)
 
-和题目二使用同样方法获取BP_FPSWidget蓝图资源，在`ShooterHUD.cpp`中创建实例，在DrawHUD()方法中根据当前`AShooterPlayerController::bFPSEnabled`正确生成Widget．
+和功能二使用同样方法获取BP_FPSWidget蓝图资源，在`ShooterHUD.cpp`中创建实例，在DrawHUD()方法中根据当前`AShooterPlayerController::bFPSEnabled`正确生成Widget．
 
 ```cpp
 //显示FPS
@@ -498,7 +498,7 @@ if(!FPSWidget->IsInViewport() && MyPC->bFPSEnabled == true)
 
 ---
 
-### 题目四
+### 功能四
 
 将局内的游戏菜单升级为3D UI (WidgetInteractionComponent) ，当菜单显示时，根据玩家位置始终显示在玩家侧前方，且可以正常点击
 
@@ -552,7 +552,7 @@ if(!FPSWidget->IsInViewport() && MyPC->bFPSEnabled == true)
 
 ## 基本物理
 
-### 题目一
+### 功能一
 
 不同的地面有不同的摩擦力
 
@@ -594,7 +594,7 @@ if(!FPSWidget->IsInViewport() && MyPC->bFPSEnabled == true)
 
    - 右边草地附着M_glass物理材质，摩擦力为0，能够下滑且速度很快
 
-### 题目二
+### 功能二
 
 ​	步枪子弹击中垃圾桶，可以把垃圾桶打飞
 
@@ -652,7 +652,7 @@ void AShooterWeapon_Instant::ProcessInstantHit_Confirmed(const FHitResult& Impac
 
 ---
 
-### 题目三
+### 功能三
 
 发射器发射的炮弹，呈抛物线飞行，碰到障碍可以反弹，碰到敌人或者倒计时结束则爆炸
 
@@ -683,7 +683,7 @@ AShooterProjectile::AShooterProjectile(const FObjectInitializer& ObjectInitializ
 
 ---
 
-### 题目四
+### 功能四
 
 角色面对墙壁时可以施展蹬墙二段跳，不用表现出蹬墙的动画，只需要满足面对墙壁足够近才能施展这个条件
 
@@ -774,7 +774,7 @@ void AShooterCharacter::OnStopJump()
 
 ---
 
-### 题目五
+### 功能五
 
 步枪子弹可以穿过一定厚度的墙，伤害随穿过障碍的厚度递减
 
@@ -938,7 +938,7 @@ if(Impact.IsValidBlockingHit() && FinalImpact.IsValidBlockingHit())
 
 3、按Z能够使角色蹲下
 
-### 题目一
+### 功能一
 
 按键（ctrl+数字键）可以触发角色不同的表演动作
 
@@ -1046,7 +1046,7 @@ Dance方法实现如下，设置必要的状态参数，并且在播放动画时
 
 实现了按键播放人物动画，3D UI 启用动画在UMG中有详细解释
 
-### 题目二
+### 功能二
 
 主角静止无输入5秒之后进入idle休闲动画，如耸肩、挠头等
 
@@ -1058,7 +1058,7 @@ Dance方法实现如下，设置必要的状态参数，并且在播放动画时
 
 #### 解决办法
 
-同题目一步骤制作蒙太奇**耸肩动画**
+同功能一步骤制作蒙太奇**耸肩动画**
 
 ![](./src/耸肩动画.png)
 
@@ -1069,7 +1069,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ![](./src/耸肩蓝图.png)
 
-### 题目三
+### 功能三
 
 蹲姿及其配套的基础移动动作
 
@@ -1109,7 +1109,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 实现按Z轴切换蹲姿和站立，不同方向的混合移动动画
 
-### 题目四
+### 功能四
 
 停步动作，并优化其衔接表现
 
@@ -1137,7 +1137,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 （导入的动画和跑步动画不适配，表现比较僵硬）
 
-### 题目五
+### 功能五
 
 脚部的IK功能
 
@@ -1233,7 +1233,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ## 渲染基础
 
-### 题目一
+### 功能一
 
 使用标准材质，把场景地面修改为砖块或木板等均可
 
@@ -1251,7 +1251,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ---
 
-### 题目二
+### 功能二
 
 使用标准材质，把枪械修改为金属
 
@@ -1267,7 +1267,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ![](./src/武器材质.png)
 
-### 题目三
+### 功能三
 
 添加一种后处理效果
 
@@ -1295,7 +1295,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
 ![](./src/屏幕空间反射材质球.png)
 
-### 题目四
+### 功能四
 
 使用材质编辑器，添加至少一种自定义材质，比如枪械上的UV动画
 
@@ -1344,7 +1344,7 @@ Tcik计时，无数入进行5秒后，播放耸肩动画，有输入就停止播
 
    最后将材质添加到Cube上，Cube囊括玩家出生地，当有玩家穿过能够高亮轮廓，外面的子弹无法打进出生地，实现一种出生保护机制。
 
-### 题目五
+### 功能五
 
 结合游戏玩法丰富技能特效，比如开火、击中或爆炸特效等
 
@@ -1400,7 +1400,7 @@ void AShooterCharacter::OnDeath(...){
 
 ## AI技术介绍
 
-### 题目一
+### 功能一
 
 通过设置NavMeshBoundsVolume生成地图的导航网格
 
@@ -1416,7 +1416,7 @@ void AShooterCharacter::OnDeath(...){
 
 解决寻路网格体在高度上绘制出现偏差问题，调整绘制寻路网格体的高度偏移将`RecastNavMesh-Common ———— Draw offset `设置为10.0f
 
-### 题目二
+### 功能二
 
 基于生成的导航网格让角色从两点间自动寻路
 
@@ -1434,7 +1434,7 @@ AI角色能够在两点间自动寻路，在到达一个目标点后延迟3秒
 
 ![](./src/自动寻路蓝图.png)
 
-### 题目三
+### 功能三
 
 在UE4中创建黑板，行为树以及行为树装饰器
 
@@ -1462,9 +1462,9 @@ AI角色主要有三种行为：
 
 #### 解决办法
 
-后续题目将会相应部分的实现进行解释
+后续功能将会相应部分的实现进行解释
 
-### 题目四
+### 功能四
 
 使用行为树的基本节点（选择器、序列节点、平行节点等）以及角色移动组件实现NPC追逐玩家的任务
 
@@ -1516,7 +1516,7 @@ Move To Enemy 任务**跟随**并攻击玩家，直至玩家死亡。
 
 ![](./src/向敌人移动.png)
 
-### 题目五
+### 功能五
 
 基于行为树和AI感知组件实现随机巡逻任务
 
