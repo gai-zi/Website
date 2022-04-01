@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # 剑指Offer
@@ -64,6 +64,44 @@ public:
         }
         //最后返回的就是多出坑的位置
         return r;
+    }
+};
+```
+
+### [15. 二维数组中的查找 ](https://www.acwing.com/problem/content/16/)
+
+**题目**：在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。
+
+请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+
+**解决办法**：
+
+根据题目给定的二维数组性质，从矩阵**右上角**开始枚举，当前枚举的是x
+
+- `x` == `target` ，找到`target`
+- `x` < `target` ，左边的数一定小于`target`，直接排除一行
+- `x` > `target` ，下边的数一定大于`target`，直接排除一列
+
+**时间复杂度**：每一步排除**一行**或**一列**，最多进行$n+m$次。所以时间复杂度$O(m+n)$
+
+```cpp
+class Solution {
+public:
+    bool searchArray(vector<vector<int>> array, int target) {
+        
+        int n = array.size();
+        if(n==0)    return false;
+        int m = array[0].size();
+        int i = 0,j = m-1;                  //从数组右上角开始遍历
+        
+        for(;i<n && j>0;)
+        {
+            if(array[i][j] == target)   return true;
+            if(array[i][j] > target) j++;   //删除一列不符合的元素
+            if(array[i][j] < target) i++;   //删除一行
+        }
+        
+        return false;
     }
 };
 ```
