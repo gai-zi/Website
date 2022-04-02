@@ -106,3 +106,40 @@ public:
 };
 ```
 
+### [16. 替换空格](https://www.acwing.com/problem/content/description/17/)
+
+**题目**：请实现一个函数，把字符串中的每个空格替换成`"%20"`。
+
+```cpp
+class Solution {
+public:
+    string replaceSpaces(string &str) {
+        string res;
+        for(auto &x : str){
+            if(x==' ')  res += "%20";
+            else res+=x;
+        }
+        return res;
+    }
+};
+```
+
+### [17. 从尾到头打印链表](https://www.acwing.com/problem/content/18/)
+
+**题目**：输入一个链表的头结点，按照 **从尾到头** 的顺序返回节点的值。返回的结果用数组存储。
+
+```cpp
+class Solution {
+public:
+    vector<int> printListReversingly(ListNode* head) {
+        vector<int> arr;
+        while(head){
+            arr.push_back(head->val);
+            head = head -> next;
+        }
+        reverse(arr.begin(), arr.end());
+        return arr;
+    }
+};
+```
+
