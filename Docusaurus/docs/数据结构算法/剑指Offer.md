@@ -143,6 +143,160 @@ public:
 };
 ```
 
+### [20. 用两个栈实现队列](https://www.acwing.com/problem/content/36/)
+
+**题目**：请用栈实现一个队列，支持如下四种操作：
+
+- push(x) – 将元素x插到队尾；
+- pop() – 将队首的元素弹出，并返回该元素；
+- peek() – 返回队首元素；
+- empty() – 返回队列是否为空；
+
+```cpp
+class MyQueue {
+public:
+
+    stack<int> s1,s2;
+    /** Initialize your data structure here. */
+    MyQueue() {
+    } 
+    /** Push element x to the back of queue. */
+    void push(int x) {
+        s1.push(x);
+    }
+    void copy(stack<int> &a, stack<int> &b) {
+        while (a.size()) {
+            b.push(a.top());
+            a.pop();
+        }
+    }
+    /** Removes the element from in front of queue and returns that element. */
+    int pop() {
+		copy(s1, s2);
+        int res = s2.top();
+        s2.pop();
+        copy(s2, s1);
+        return res;
+    }
+    /** Get the front element. */
+    int peek() {
+		copy(s1, s2);
+        int res = s2.top();
+		copy(s2, s1);
+        return res;
+    }
+    /** Returns whether the queue is empty. */
+    bool empty() {
+        return s1.empty();
+    }
+};
+```
+
+### [21. 斐波那契数列](https://www.acwing.com/activity/content/problem/content/216/)
+
+**题目**：输入一个整数$n$，求斐波那契数列的第$n$项。假定从$0$开始，第$0$项为$0$。
+
+> [求解斐波那契数列的若干方法 - AcWing](https://www.acwing.com/blog/content/25/)
+
+```cpp
+class Solution {
+public:
+    int Fibonacci(int n) {
+        if(n == 0)        return 0;
+        else if(n == 1)     return 1;
+        else return Fibonacci(n-1) + Fibonacci(n-2);
+    }
+};
+```
+
+### [22. 旋转数组的最小数字](https://www.acwing.com/problem/content/20/)
+
+**题目**：把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+
+输入一个升序的数组的一个旋转，输出旋转数组的最小元素。
+
+例如数组 {$3,4,5,1,2$ }为{$1,2,3,4,5$} 的一个旋转，该数组的最小值为$1$。
+
+数组可能包含重复项。
+
+**注意**：数组内所含元素非负，若数组大小为$0$，请返回$-1$。
+
+**解决办法**：二分。图中水平的实线段表示相同元素。我们发现除了最后水平的一段（黑色水平那段）之外，其余部分满足二分性质：竖直虚线左边的数满足 `nums[i] ≥ nums[0]`；而竖直虚线右边的数不满足这个条件。
+分界点就是整个数组的最小值。所以我们先将最后水平的一段删除即可。
+
+另外，不要忘记处理数组完全单调的**特殊情况**：当我们删除最后水平的一段之后，如果剩下的最后一个数大于等于第一个数，则说明数组完全单调。
+
+![](.\src\旋转数组的最小数字.png)
+
+**时间复杂度分析**：二分的时间复杂度是$O(logn)$，删除最后水平一段的时间复杂度最坏是$O(n)$，所以总时间复杂度是$O(n)$。
+
+```cpp
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int n = nums.size() - 1;
+        if (n < 0) return -1;
+        while(n>0 && nums[n] == nums[0])   n--;    //删除数组中前后相等的后序元素
+        if(nums[n] >= nums[0])  return nums[0];     //考虑数组单调情况
+        int l=0, r=n;
+        while(l<r)
+        {
+            int mid = l + r >> 1;
+            if(nums[mid] < nums[0]) r = mid;    //最小值一定在mid的左边，在第二个升序区间头部
+            else l = mid + 1;
+        }
+        return nums[r];
+    }
+};
+```
+
+## Week 2
+
+### [26. 二进制中1的个数](https://www.acwing.com/problem/content/description/25/)
+
+**题目**：输入一个$32$位整数，输出该数二进制表示中$1$的个数。
+
+**解决办法1**：参考基础算法-位运算符
+
+```cpp
+class Solution {
+public:
+    int LowBit(int x){
+        return x & -x;
+    }
+    int NumberOf1(int n) {
+        int res = 0;
+        while(n)
+        {
+            n -= LowBit(n);
+            res++;
+        }
+        return res;
+    }
+};
+```
+
+**解决办法2**：在C++中如果我们右移一个负整数，系统会自动在最高位补$1$，这样会导致$n$永远不为$0$，就死循环了。
+解决办法是把$n$强制转化成**无符号整型**，这样$n$的二进制表示不会发生改变，但在右移时系统会自动在最高位补0。
+
+**时间复杂度**：每次会将$n$除以$2$，最多会除$logn$次，所以时间复杂度是$O(logn)$
+
+```cpp
+class Solution {
+public:
+    int NumberOf1(int n) {
+        int res = 0;
+        unsigned int un = n; 
+        while (un) res += un & 1, un >>= 1;
+        return res;
+    }
+};
+```
+
+
+
+## Week 7
+
 ### [79. 滑动窗口的最大值](https://www.acwing.com/activity/content/problem/content/274/)
 
 **题目**：给定一个数组和滑动窗口的大小，请找出所有滑动窗口里的最大值。
