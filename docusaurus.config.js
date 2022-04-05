@@ -9,7 +9,7 @@ const katex = require('rehype-katex');
     title: 'Gaizi HomePage',
     tagline: 'Game Builder',
     url: 'https://gai-zi.github.io',
-    baseUrl: '/Website/',
+    baseUrl: '/',
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
     favicon: 'img/favicon.ico',
