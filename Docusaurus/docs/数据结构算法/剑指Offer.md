@@ -143,3 +143,28 @@ public:
 };
 ```
 
+### [79. 滑动窗口的最大值](https://www.acwing.com/activity/content/problem/content/274/)
+
+**题目**：给定一个数组和滑动窗口的大小，请找出所有滑动窗口里的最大值。
+
+```cpp
+class Solution {
+public:
+    vector<int> maxInWindows(vector<int>& nums, int k) {
+        deque<int> q;
+        vector<int> res;
+        for(int i=0;i<nums.size();i++)
+        {
+            //判断队头是否需要出队
+            if(!q.empty() && i-k+1 > q.front())  q.pop_front();
+            //维护单调性
+            while(!q.empty() && nums[q.back()] <= nums[i])  q.pop_back();
+            q.push_back(i);
+            //队头为最大元素
+            if(i>=k-1)    res.push_back(nums[q.front()]);
+        }
+        return res;
+    }
+};
+```
+

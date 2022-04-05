@@ -1,31 +1,17 @@
----
-slug: ShooterGame说明文档
-title: ShooterGame说明文档
-authors: gaizi
-tags: [UE4, C++, Aurora Studios]
----
-
 # ShooterGame说明文档
 
-:::info
+> 项目源代码：[gai-zi/ShooterGame: Aurora Studios (github.com)](https://github.com/gai-zi/ShooterGame)
+>
+> 打包游戏链接：https://share.weiyun.com/Lxd5HSw1
 
-项目源代码：[gai-zi/ShooterGame: Aurora Studios (github.com)](https://github.com/gai-zi/ShooterGame)
-
-打包游戏链接：https://share.weiyun.com/Lxd5HSw1
-
-:::
-
-:::tip
-
-UE版本：4.26
-
-“如需要进入编辑器或导出应用查看实现效果，请选择'Highrise'地图”
-
-:::
+> UE版本：4.26
+>
+> “如需要进入编辑器或导出应用查看实现效果，请选择'Highrise'地图”
+>
 
 ## 游戏模式
 
-### 炮台**使用说明**
+### 炮台使用说明
 
  1、玩家贴近炮台，准星对准炮台，按**E键**进入炮台，再按E键退出炮台继续操控原角色
 
