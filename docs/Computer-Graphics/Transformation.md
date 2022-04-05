@@ -48,7 +48,7 @@ $$
 
 #### Scale Matrix 缩放矩阵
 
-![](./src/scale.png)
+![](./src/scale00.png)
 
 **均匀缩放**
 $$
