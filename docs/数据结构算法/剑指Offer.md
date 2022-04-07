@@ -293,7 +293,58 @@ public:
 };
 ```
 
+### [28. 在O(1)时间删除链表结点](https://www.acwing.com/problem/content/85/)
 
+**题目**：给定单向链表的一个节点指针，定义一个函数在$O(1)$时间删除该结点。假设链表一定存在，并且该节点一定不是尾节点。
+
+**解决办法**：由于是单链表，我们不能找到前驱节点，所以我们不能按常规方法将该节点删除。
+我们可以换一种思路，将下一个节点的值复制到当前节点，然后将下一个节点删除即可。
+
+```cpp
+class Solution {
+public:
+    void deleteNode(ListNode* node) {
+        ListNode* ne = node->next;
+        
+        node->val = ne->val;
+        node->next = ne->next;
+        
+        delete ne; 
+    }
+};
+```
+
+### [29. 删除链表中重复的节点](https://www.acwing.com/problem/content/description/27/)
+
+**题目**：在一个排序的链表中，存在重复的节点，请删除该链表中重复的节点，重复的节点不保留。
+
+**解决办法**：为了方便处理边界情况，我们定义一个虚拟元素$dummy$指向链表头节点。
+然后从前往后扫描整个链表，**每次扫描元素相同的一段**，如果这段中的元素个数**多于1个**，则**将整段元素直接删除**。
+
+**时间复杂度**：整个链表只扫描一遍，所以时间复杂度是$O(n)$。
+
+> 很巧妙的记录**前驱节点**$p$和**重复元素后第一个节点**$q$的指针，这样可以直接`p->next = q`删除$p-q$之间的所有节点
+
+```cpp
+class Solution {
+public:
+    ListNode* deleteDuplication(ListNode* head) {
+        ListNode* front = new ListNode(-1);	
+        front->next = head;		//前驱节点
+        
+        auto p = front;			
+        while(p->next){
+            auto q = p->next;	//扫描的节点
+            //如果相同(包括自己),向后遍历
+            while(q && p->next->val == q->val)  q = q->next;
+            //如果上面只遍历了一次，说明p->next~~q没有重复元素，否则直接删除期间所有节点
+            if(p->next->next == q)  p = p->next;	
+            else p->next = q;
+        }
+        return front->next;
+    }
+};
+```
 
 ## Week 7
 
