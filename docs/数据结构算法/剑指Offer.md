@@ -143,6 +143,95 @@ public:
 };
 ```
 
+### [18. 重建二叉树](https://www.acwing.com/activity/content/problem/content/213/)
+
+**题目**：输入一棵二叉树前序遍历和中序遍历的结果，请重建该二叉树。
+
+- 二叉树中每个节点的值都互不相同；
+- 输入的前序遍历和中序遍历一定合法；
+
+![image-20220408164821568](src/image-20220408164821568.png)
+
+**解决办法**：**DFS递归**，$O(n)$
+
+递归建立整棵二叉树：先递归创建左右子树，然后创建根节点，并让指针指向两棵子树。
+
+1. 先利用前序遍历**找根节点**：前序遍历的第一个数，就是根节点的值；
+2. 在**中序遍历中找到根节点的位置**$k$，则$k$左边是左子树的中序遍历，右边是右子树的中序遍历；
+3. 假设左子树的中序遍历的长度是$l$，则在前序遍历中，根节点后面的$l$个数，是左子树的前序遍历，剩下的数是右子树的前序遍历
+4. 有了**左右子树的前序遍历和中序遍历**，我们可以先递归创建出左右子树，然后再创建根节点；
+
+> 如何确定左子树和右子树区间？
+>
+> ​	![image-20220408165522378](src/image-20220408165522378.png)
+>
+> 1. 假设本次的`pre`数组的范围是`[pl,pr]`，而in数组的范围是`[il,ir]`
+> 2. `pre`数组的第一个数,，这就是剩下所有的子树的根，找到其在中序数组中所在的位置，记为`k`
+> 3. 那么，左子树的`pre`数组范围是`[pl+1,pl+k-il]`，因为在左子树的起始点肯定从`pl+1`开始；左子树的终点=`pl`+左子树长度(图中左子树长度=`pIndex-inLeft`对应`k-il`)，所以终点为pl+k-il；
+> 4. 左子树的in数组范围是`[il,k-1]`，刚好在k号点之前的元素，这个很简单不需要解释。
+> 5. 右子树的pre数组的范围是`[pl+k-il+1,pr]`，也就是刚好是剩下的那些点。
+> 6. 右子树的in数组的范围是`[k+1,ir]`，也就是剩下的点。
+>
+> 
+
+```cpp
+class Solution {
+public:
+    unordered_map<int, int> hash;     //hash表记录中序遍历数组中每个元素的下标
+    vector<int> preorder, inorder;
+    TreeNode* buildTree(vector<int>& _preorder, vector<int>& _inorder) {
+        preorder = _preorder, inorder = _inorder;
+        int n = preorder.size();
+        for(int i=0;i<n;i++)   hash[inorder[i]] = i;    //记录(inorder[i],i)
+        return dfs(0, n-1, 0, n-1);
+    }
+    //dfs参数：两个遍历数组的双指针
+    TreeNode* dfs(int pl, int pr, int il, int ir){
+        if(pl > pr) return nullptr;
+        TreeNode* root = new TreeNode(preorder[pl]);    //每个子树的前序遍历第一个节点为根
+        int k = hash[root->val];                //根节点在中序遍历的下标,由此确定左右子树区间
+        //找到左右子节点
+        root->left = dfs(pl+1, pl+k-il, il, k-1);        
+        root->right = dfs(pl+k-il+1, pr, k+1, ir);
+ 
+        return root;
+    }
+};
+```
+
+### [19. 二叉树的下一个节点](https://www.acwing.com/problem/content/31/)
+
+**题目**：给定一棵二叉树的其中一个节点，请找出中序遍历序列的下一个节点。
+
+- 如果给定的节点是中序遍历序列的最后一个，则返回空节点;
+- 二叉树一定不为空，且给定的节点一定不是空节点；
+
+**解决办法**：依照二叉树中序遍历逻辑
+
+1. 如果当前节点有右儿子，则右子树中最左侧的节点就是当前节点的后继。比如F的后继是H；
+2. 如果当前节点没有右儿子，则需要沿着father域一直向上找，找到第一个是其father左儿子的节点，该节点的father就是当前节点的后继。比如当前节点是D，则第一个满足是其father左儿子的节点是F，则C的father就是D的后继，即F是D的后继。
+
+![image-20220408174032207](src/image-20220408174032207.png)
+
+```cpp
+class Solution {
+public:
+    TreeNode* inorderSuccessor(TreeNode* p) {
+        if(p->right)    //有右孩子
+        {   
+            p = p->right;
+            while(p->left)  p = p->left;    //右子树的最左儿子
+            return p;
+        } 
+        else  if(p->father)   //没有右孩子，则回溯父节点
+        {
+            if(p == p->father->right)   return p->right;     //右子树适用，返回null
+            if(p->father->right) return p->father;   //左子树适用,返回父节点
+        }
+    }
+};
+```
+
 ### [20. 用两个栈实现队列](https://www.acwing.com/problem/content/36/)
 
 **题目**：请用栈实现一个队列，支持如下四种操作：
@@ -249,6 +338,59 @@ public:
     }
 };
 ```
+
+### [23. 矩阵中的路径](https://www.acwing.com/problem/content/description/21/)
+
+**题目**：请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。
+
+路径可以从矩阵中的任意一个格子开始，每一步可以在矩阵中向左，向右，向上，向下移动一个格子。
+
+如果一条路径经过了矩阵中的某一个格子，则之后不能再次进入这个格子。
+
+**解决办法**：在深度优先搜索中，最重要的就是考虑好搜索顺序。
+
+我们先枚举单词的起点，然后依次枚举单词的每个字母。
+过程中需要将已经使用过的字母改成一个特殊字母，以避免重复使用字符。
+
+**时间复杂度分析**：单词起点一共有$n^2$个，单词的每个字母一共有上下左右四个方向可以选择，但由于不能走回头路，所以除了单词首字母外，仅有三种选择。所以总时间复杂度是$O(n^23^k)$
+
+```cpp
+class Solution {
+public:
+    bool hasPath(vector<vector<char>>& matrix, string &str) {
+        //空集直接返回
+        if(matrix.size() == 0)  return false;
+        //枚举所有元素
+        for (int i = 0; i < matrix.size(); i ++ )
+            for (int j = 0; j < matrix[i].size(); j ++ )
+                if (dfs(matrix, str, 0, i, j))
+                    return true;
+        return false;
+    }
+    
+    bool dfs(vector<vector<char>>& matrix, string &str, int u, int x, int y){
+        if (matrix[x][y] != str[u]) return false;
+        if(u == str.size()-1)   return true;
+        //偏移量
+        int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+        //标记
+        char t = matrix[x][y];
+        matrix[x][y] = '*';
+        
+        for (int i = 0; i < 4; i ++ ){
+            int a = x + dx[i], b = y + dy[i];
+            if(a>=0 && a<matrix.size() && b>=0 && b<matrix[a].size()){
+                if(dfs(matrix, str, u+1, a, b))
+                   return true;
+            }
+        }
+        matrix[x][y] = t;
+        return false; 
+    }
+};
+```
+
+
 
 ## Week 2
 
