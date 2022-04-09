@@ -347,7 +347,7 @@ public:
 
 如果一条路径经过了矩阵中的某一个格子，则之后不能再次进入这个格子。
 
-**解决办法**：在深度优先搜索中，最重要的就是考虑好搜索顺序。
+**解决办法（DFS）**：在深度优先搜索中，最重要的就是考虑好搜索顺序。
 
 我们先枚举单词的起点，然后依次枚举单词的每个字母。
 过程中需要将已经使用过的字母改成一个特殊字母，以避免重复使用字符。
@@ -393,6 +393,103 @@ public:
 
 
 ## Week 2
+
+### [24. 机器人的运动范围](https://www.acwing.com/problem/content/22/)
+
+**题目**：地上有一个$m$行和$n$列的方格，横纵坐标范围分别是$0∼m−1$和$0∼n−1$。
+
+一个机器人从坐标$(0,0)$的格子开始移动，每一次只能向左，右，上，下四个方向移动一格。
+
+但是不能进入行坐标和列坐标的数位之和大于$k$的格子。
+
+请问该机器人能够达到多少个格子？
+
+**解决办法（BFS）**：这是一个典型的**宽度优先搜索问题**，我们从 (0, 0) 点开始，每次朝上下左右四个方向扩展新的节点即可。
+
+扩展时需要注意新的节点需要满足如下条件：
+
+- 之前没有遍历过，这个可以用个`bool`数组来判断；
+- 没有走出边界；
+- 横纵坐标的各位数字之和小于$k$；
+
+**时间复杂度**：每个节点最多只会入队一次，所以时间复杂度不会超过方格中的节点个数。最坏情况下会遍历方格中的所有点，所以时间复杂度就是$O(nm)$。
+
+```cpp
+class Solution {
+public:
+    int movingCount(int threshold, int rows, int cols){
+       if(threshold==0) return 1;		//特殊情况
+       vector<vector<int>>  state(rows,vector<int>(cols,0));
+       
+       return bfs(state, threshold, rows, cols);
+    }
+    
+    int bfs(vector<vector<int>>  state, int threshold, int rows, int cols){
+        queue<pair<int,int>> q;
+        q.push({0,0});      //起点入队
+        int res = 0;
+        int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};   //x点周围4个点的横纵坐标偏移量
+        
+        while(q.size()){
+            auto t = q.front();     //取出队头元素
+            q.pop();                //出队
+            for(int i=0;i<4;i++){
+                int x = dx[i] + t.first, y = dy[i] + t.second;  //周围横纵坐标
+                if(x>=0 && x<rows && y>=0 && y<cols && Sum(x, y) <= threshold && state[x][y] == 0){
+                    q.push({x,y});
+                    state[x][y] = 1;
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+    int Sum(int x, int y){	//计算数位之和
+        int sum = 0;
+        while(x)    sum += x%10, x /= 10;
+        while(y)    sum += y%10, y /= 10;
+        return sum;
+    }
+};
+```
+
+### [25. 剪绳子](https://www.acwing.com/problem/content/description/24/)
+
+**题目**：给你一根长度为$n$绳子，请把绳子剪成$m$段（$m$、$n$都是整数，$2≤n≤58$并且$m≥2$）
+
+每段的绳子的长度记为$k[1]$、$k[2]$、……、$k[m]$
+
+$k[1]k[2]…k[m]$可能的最大乘积是多少？
+
+例如当绳子的长度是$8$时，我们把它剪成长度分别为$2、3、3$的三段，此时得到最大的乘积$18$
+
+**解决办法（经典数学问题）**：把一个整数$N$拆分成若干个正整数只有有限种拆法，所以存在最大乘积。
+
+假设$N=n_1+n_2+...+n_k$,并且$n_1*n_2*...*n_k$是最大乘积
+
+- 数字1不会成为$n_i$
+- 如果某个$n_i=4$，拆成$2$和$2$乘积不变，所以不妨假设没有4
+- 如果有$3$个以上的$2$，那么$3*3>2*2*2$，所以用3乘积更大。
+
+综上，选用尽量多的$3$，直到剩下$2$和$4$时，用$2$
+
+**时间复杂度**：当 $n$比较大时，$n$会被拆分成$⌈n/3⌉$个数，我们需要计算这么多次减法和乘法，所以时间复杂度是$O(n)$。
+
+```cpp
+class Solution {
+public:
+    int integerBreak(int n) {
+        if (n <= 3) return 1 * (n - 1);
+        int res = 1;
+        if (n % 3 == 1) res = 4, n -= 4;
+        else if (n % 3 == 2) res = 2, n -= 2;
+        while (n) res *= 3, n -= 3;
+        return res;
+    }
+};
+```
+
+
 
 ### [26. 二进制中1的个数](https://www.acwing.com/problem/content/description/25/)
 
@@ -484,6 +581,26 @@ public:
             else p->next = q;
         }
         return front->next;
+    }
+};
+```
+
+### [33. 链表中倒数第k个节点库](https://www.acwing.com/problem/content/32/)
+
+**题目**：输入一个链表，输出该链表中倒数第$k$个结点
+
+**解决办法**：$O(n)$，遍历两次链表
+
+```cpp
+class Solution {
+public:
+    ListNode* findKthToTail(ListNode* head, int k) {
+        int n = 0;
+        for (auto p = head; p; p = p->next) n ++ ;
+        if (n < k) return nullptr;
+        auto p = head;
+        for (int i = 0; i < n - k; i ++ ) p = p->next;
+        return p;
     }
 };
 ```

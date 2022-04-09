@@ -85,7 +85,7 @@ str.find(curStr) == string::npos
 
 ```cpp
 //从str中截取从下标0开始，length长度的字符串
-resStr = str.substr(0,lengt h);
+resStr = str.substr(0,length);
 ```
 
 ## queue
