@@ -636,3 +636,9 @@ $$
 >
 > 得到的矩阵与（x，y，z，1）相乘后z的值等于$(-nf)/z+(n+f)$,是个反比例函数，这个图像恒过（n，n）与（f，f），在n与f之间，是下凹的，所以变小了
 
+### 作业
+
+[GAMES101-作业1详解 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/361156478)
+
+[【Games101】Lecture05 光栅化 笔记 (betheme.net)](http://betheme.net/news/txtlist_i237927v.html#:~:text=垂直可视角度 vertical,field of view：与上沿重心连线，和与下沿中心连线之间的夹角（图里两条红色虚线的夹角）。)
+
