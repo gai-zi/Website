@@ -4,7 +4,9 @@ sidebar_position: 1
 
 # C#
 
-## Debug
+## Basic
+
+### Debug
 
 ```c#
 print("Hello World");
@@ -13,7 +15,7 @@ Debug.LogWarning("This is a warning message!");
 Debug.LogError("This is an error message!");
 ```
 
-### 格式化输出
+#### 格式化输出
 
 ```c#
 int a = 100;
@@ -24,7 +26,7 @@ Debug.Log(string.Format("a is: {0}, b is {1}", a, b));
 Debug.Log("The a is:" + a);
 ```
 
-### 彩色打印
+#### 彩色打印
 
 ```c#
 Debug.LogFormat("This is <color=#ff0000>{0}</color>", "red");
@@ -35,7 +37,7 @@ Debug.LogFormat("This is <color=yellow>{0}</color>", "yellow");
 
 > [日志存储与上传 | 日志开关 | 日志双击溯源](https://blog.csdn.net/linxinfa/article/details/119280053)
 
-## ForeachLoop
+### ForeachLoop
 
 ```c#
 foreach(var item in strings){
@@ -43,7 +45,7 @@ foreach(var item in strings){
 }
 ```
 
-## 线性插值
+### 线性插值
 
 在制作游戏时，有时可以在两个值之间进行线性插值。这是通过 Lerp 函数来完成的。线性插值会在两个给定值之间找到某个百分比的值。例如，我们可以在数字 3 和 5 之间按 50% 进行线性插值以得到数字 4。这是因为 4 是 3 和 5 之间距离的 50%。
 
@@ -92,21 +94,21 @@ void Update (){
 
 请注意，在对值进行平滑时，通常情况下最好使用 SmoothDamp 函数。仅当您确定想要的效果时，才应使用 Lerp 进行平滑。
 
-## 引用
+### 引用
 
 ![image-20220426185903324](src/image-20220426185903324.png)
 
-```
+```csharp
 //引用，获取地址直接改变地址中的数据
 Transform tran = transform;
 tran.localScale = new Vector3(3f, 3f, 3f);
 ```
 
-## as
+### as
 
-在程序中，进行类型转换时常见的事，C#支持基本的强制类型转换方法，比较低效的方法：
+在程序中，进行类型转换时常见的事，csharp支持基本的强制类型转换方法，比较低效的方法：
 
-```c#
+```csharp
 Object obj1 = new NewType();
 NewType newValue = (NewType)obj1;
 //这样强制转换的时候，这个过程是不安全的，因此需要用try-catch语句进行保护，这样一来，比较安全的代码方式应如下所示：
@@ -123,7 +125,31 @@ catch (Exception err)
 
 **高效的方法：**
 
-```c#
+```csharp
 Object obj1 = new NewType（）；
 NewTYpe newValue = obj1 as NewType；
 ```
+
+### 属性
+
+```csharp
+private int experience;
+public int Experience
+{
+    get
+    {
+        //othering
+        return experience;
+    }
+    set
+    {
+        //othering
+        experience = value;
+    }
+}
+//自动实现prop
+public int Health { get; set; }
+```
+
+### Statics
+

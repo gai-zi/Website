@@ -115,6 +115,7 @@ const katex = require('rehype-katex');
             theme: lightCodeTheme,
             darkTheme: darkCodeTheme,
             additionalLanguages: ['cpp'],
+            additionalLanguages: ['csharp'],
         },
     }),
 });
