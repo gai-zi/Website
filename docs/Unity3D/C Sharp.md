@@ -91,3 +91,39 @@ void Update (){
 这意味着强度变化将按每秒而不是每帧发生。
 
 请注意，在对值进行平滑时，通常情况下最好使用 SmoothDamp 函数。仅当您确定想要的效果时，才应使用 Lerp 进行平滑。
+
+## 引用
+
+![image-20220426185903324](src/image-20220426185903324.png)
+
+```
+//引用，获取地址直接改变地址中的数据
+Transform tran = transform;
+tran.localScale = new Vector3(3f, 3f, 3f);
+```
+
+## as
+
+在程序中，进行类型转换时常见的事，C#支持基本的强制类型转换方法，比较低效的方法：
+
+```c#
+Object obj1 = new NewType();
+NewType newValue = (NewType)obj1;
+//这样强制转换的时候，这个过程是不安全的，因此需要用try-catch语句进行保护，这样一来，比较安全的代码方式应如下所示：
+Object obj1 = new NewType（）;
+NewType newValue = null;
+try{
+    undefined newValue = （NewType）obj1；
+}
+catch (Exception err)
+{
+    undefined MessageBox.Show（err.Message）;
+}
+```
+
+**高效的方法：**
+
+```c#
+Object obj1 = new NewType（）；
+NewTYpe newValue = obj1 as NewType；
+```
