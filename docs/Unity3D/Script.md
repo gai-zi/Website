@@ -82,6 +82,6 @@ void Update(){
 
 这样的设计理念，就保证了无论帧率是多是少，我们让物体1秒移动10米，最后1秒移动的就一定是10米
 
-## GetComponent<>()
+## GetComponent
 
 尽量少调用，只在awake()和start()中调用
