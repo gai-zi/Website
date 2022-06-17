@@ -7,7 +7,7 @@ sidebar_position: 1
 
 ## Debug
 
-```csharp
+```cs
 print("Hello World");
 Debug.Log("Hello World");
 Debug.LogWarning("This is a warning message!");
@@ -706,7 +706,9 @@ Unity要将四元数转换为欧拉角，欧拉角要遵从**万向节锁**，�
 
 > 允许在脚本中创建可靠且复杂的行为
 
-**函数的容器**，可以进行传递，或像变量一样使用，可以向委托分配值，并且这些值可以在运行时更改。
+C#通过委托来实现**回调函数**：回调函数是一种很有用的编程机制，可以被广泛应用在观察者模式中
+
+相当于**函数的容器**，可以进行传递，或像变量一样使用，可以向委托分配值，并且这些值可以在运行时更改。（但前提是委托和对应**传递方法的签名得是相同的**，签名指的是他们的参数类型和返回值类型）
 
 ```csharp
 public class DelegateScript : MonoBehaviour 
@@ -768,7 +770,98 @@ public class MulticastScript : MonoBehaviour
 }
 ```
 
+### 委托的三种简化方式
+
+#### 1. Action & Func
+
+- Action提供的是**无返回值**的委托类型，它提供了从从**无参数到最多5个参数**的定义形式
+- 而Func提供的是**有返回值**的委托类型，在Action的基础上，每种形式又指定了一个返回值类型
+
+```csharp
+	// 声明一个委托类型
+	public delegate void MyHandler(int a);
+	// 声明了委托类型的实例
+	public MyHandler myHandler;
+
+	// 声明一个Action类型的实例
+	public Action<int> myHandler2;
+	
+	// 声明一个Func类型的实例
+	public Func<int, int> myHander3;
+
+	private void Start()
+	{		
+		myHandler2 += PrintNum;
+		myHander3 += PrintNumDouble;
+	}
+
+	private void Update()
+	{
+		if (Input.GetMouseButtonDown(0))
+		{
+			myHandler2(5);
+			myHander3(10);
+		}
+	}
+
+	void PrintNum(int a)
+	{
+		Debug.Log(a);
+	}
+
+	int PrintNumDouble(int b)
+	{
+		Debug.Log(b * 2);
+		return b * 2;
+	}
+```
+
+#### 2. 匿名方法
+
+**匿名方法的价值在于简化代码**
+
+```csharp
+private void Start()
+{
+
+    // 将匿名方法用于Action委托类型
+    Action<int> printNumAdd = delegate(int a)
+    {
+        int b = 3;
+        Debug.Log(a + b);
+    };
+
+    printNumAdd(2);
+}
+```
+
+#### 3. Lambda表达式
+
+**lambda表达式是匿名方法的进一步演化和简化，但是本身并非委托类型，不过它可以通过多种方式隐式或显式转换成一个委托实例。**
+
+```csharp
+// 将lambda表达式用于Action委托类型
+Action<int> printNumDouble = (int a) =>
+{
+    Debug.Log(a * a);
+};
+
+printNumDouble(3);
+```
+
+**注意事项：**
+
+- 注册委托 和 注销委托 最好成对出现
+
+- 委托有可能为 null，所以最好在声明委托变量时，设置一个初始值，可以减少空指针异常的风险，如下：
+
+  ```csharp
+  public Action<int> OnAgeChanged = (age)=>{}; 
+  ```
+
 ## 事件 Events
+
+> 只能在所声明的类内部Invoke
 
 特殊的委托，**提醒其他类发生了某个事件**
 
@@ -835,3 +928,6 @@ public class ColorScript : MonoBehaviour
     }
 }
 ```
+
+- 自定义 Attribute 只需要继承 System.Attribute
+- 自定义 Attribute 通常需要与反射配合
