@@ -16,7 +16,7 @@ Debug.LogError("This is an error message!");
 
 ### 格式化输出
 
-```csharp
+```C#
 int a = 100;
 float b = 0.6f;
 Debug.Log(string.Format("a is: {0}, b is {1}", a, b));
