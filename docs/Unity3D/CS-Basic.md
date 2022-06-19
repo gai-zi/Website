@@ -36,14 +36,6 @@ Debug.LogFormat("This is <color=yellow>{0}</color>", "yellow");
 
 > [日志存储与上传 | 日志开关 | 日志双击溯源](https://blog.csdn.net/linxinfa/article/details/119280053)
 
-## ForeachLoop
-
-```csharp
-foreach(var item in strings){
-    print (item);
-}
-```
-
 ## Slerp 球形插值
 
 > 曲线上插值，开始慢，中间快
@@ -129,7 +121,17 @@ Transform tran = transform;
 tran.localScale = new Vector3(3f, 3f, 3f);
 ```
 
-## as
+## 关键字
+
+## Foreach
+
+```csharp
+foreach(var item in strings){
+    print (item);
+}
+```
+
+### as
 
 在程序中，进行类型转换时常见的事，csharp支持基本的强制类型转换方法，比较低效的方法：
 
@@ -155,28 +157,7 @@ Object obj1 = new NewType（）；
 NewTYpe newValue = obj1 as NewType；
 ```
 
-## 属性
-
-```csharp
-private int experience;
-public int Experience
-{
-    get
-    {
-        //othering
-        return experience;
-    }
-    set
-    {
-        //othering
-        experience = value;
-    }
-}
-//自动实现prop
-public int Health { get; set; }
-```
-
-## Statics
+### statics
 
 静态成员是跨类的所有实例共享的成员
 
@@ -184,36 +165,21 @@ public int Health { get; set; }
 - **静态变量**：所有实例共享
 - **静态类**：不能实例化
 
-## 泛型
+#### **静态构造函数**
 
-泛型是一种特征，通过该特征**类可以作为参数**传递给类和方法等。
-
-允许在不了解所处理数据的确切类型的情况下进行一般编程
+静态构造函数在类的静态成员第一次访问或第一个类实例创建之前由系统调用
 
 ```csharp
-//这是一个泛型方法。注意通用
-//类型“T”。该“T”将在运行时替换为实际类型。
-//限定T只能为SomeohterClass或其衍生类
-public T GenericMethod<T>(T param) where T : SomeohterClass
-{
-    return param;
-}
-
-//这是一个泛型类。注意通用类型“T”。
-//“T”将被替换为实际类型，同样，
-//该类中使用的“T”类型实例也将被替换。
-public class GenericClass <T>
-{
-    T item;
-
-    public void UpdateItem(T newItem)
-    {
-        item = newItem;
-    }
-}
+class SimpleClass{     
+    static readonly long baseline;      
+    
+    static SimpleClass(){         
+        baseline = DateTime.Now.Ticks;     
+    } 
+} 
 ```
 
-## Inheritance
+### base(Inheritance)
 
 使用 `base` 关键字，可以从派生类中调用基类的 `Getinfo` 方法
 
@@ -303,6 +269,224 @@ Output:
 in BaseClass()
 in BaseClass(int i)
 */
+```
+
+### partial
+
+**将一个类的定义拆分到不同的文件中**，容易实现对类进行扩展的操作
+
+```csharp
+// 需要在同一个程序集中的同一个命名空间 
+namespace QFramework.Partial 
+{     
+    // 类名 和 访问权限 要完全一致 
+    public partial class PartialClass     
+    {         
+        public string A { get; set; }     
+    } 
+}  
+namespace QFramework.Partial 
+{     
+    // 加上 abstract 关键字，那么 PartialClass 则变成抽象类型 
+    public abstract partial class PartialClass     
+    {         
+        public string B { get; set; }     
+    } 
+} 
+```
+
+**用 partial 关键字把一个静态类拆分到了几个文件中**
+
+`Observable.XXX.cs`
+
+```csharp
+public static partial Observable 
+{     
+    public static IObserver<TSource> Create() {}     
+    ... 
+} 
+```
+
+`Observable.YYY.cs`
+
+```csharp
+public static partial Observable 
+{     
+    public static IObserver<TSource> Timer() {}     
+    ... 
+} 
+```
+
+### yield
+
+yield 实质是一个**语法糖**，它让程序员能够更方便的去使用迭代器，通过 yield 你可以直接使用迭代器操作而不需要去实现 IEnumerable 和 IEnumerator，也不需要一个临时的 Collection 来完成迭代。
+
+**yield 有两种格式声明**
+
+```csharp
+yield return <expression>; 
+yield break; 
+```
+
+我们把包含 yield 语句的方法或属性称为迭代块。
+
+```csharp
+public class YieldDeepExample : MonoBehaviour   
+    {     
+        private void Start()     
+        {       
+            var enumeratorTest = new IEnumeratorTest();        
+            
+            foreach(var item in enumeratorTest)       
+            {         
+                Debug.Log(item);       
+            }     
+        }        
+        
+        class IEnumeratorTest     
+        {       
+            public IEnumerator GetEnumerator()       
+            {         
+                yield return 1;         
+                
+                yield return 2;         
+                
+                yield return "枚举器";       
+            }     
+        }   
+    } 
+```
+
+## 属性
+
+可以单独给`get` or `set`设置访问权限`public` or `private`
+
+```csharp
+private int experience;
+public int Experience
+{
+    get
+    {
+        //othering
+        return experience;
+    }
+    set
+    {
+        //othering
+        experience = value;
+    }
+}
+//自动实现prop
+public int Health { get; set; }
+```
+
+## 泛型
+
+泛型是一种特征，通过该特征**类可以作为参数**传递给类和方法等。
+
+允许在不了解所处理数据的确切类型的情况下进行一般编程
+
+```csharp
+//这是一个泛型方法。注意通用
+//类型“T”。该“T”将在运行时替换为实际类型。
+//限定T只能为SomeohterClass或其衍生类
+public T GenericMethod<T>(T param) where T : SomeohterClass
+{
+    return param;
+}
+
+//这是一个泛型类。注意通用类型“T”。
+//“T”将被替换为实际类型，同样，
+//该类中使用的“T”类型实例也将被替换。
+public class GenericClass <T>
+{
+    T item;
+
+    public void UpdateItem(T newItem)
+    {
+        item = newItem;
+    }
+}
+```
+
+在 C# 实现泛型之前，我们只能使用 ArrayList 来充当不定长的数组。
+
+而 **ArrayList** 所存储的元素都需要转换成 object 类型，其中也包括值类型，而值类型转换成 object 需要做装箱操作，这样会造成**性能的消耗**。
+
+而 ArrayList 所存储的 object 类型，是**类型不安全的**，因为ArrayList 可以存储任何类型，可以同时存储 int 和 string 甚至是自己创建的对象，也就是说你从 ArrayList 中拿到一个元素，那么这个元素的类型是不确定的，没有约束的。
+
+那么有没有什么方式避免 ArrayList 存储值类型造成的性能消耗么，同时也能约束存储的类型。
+
+答案就是**泛型**。
+
+在 C# 添加了泛型这个特性之后，`List<T>` 就成为了 ArrayList 的替代，`List<T>` 不管是存储值类型还是引用类型，它的性能都是非常高的，而一旦确定了 T 是什么类型，那么 List 中只能添加类型为 T （或者继承于 T）的元素。
+
+### 泛型接口-继承
+
+```csharp
+public interface Base<T> where T : Base<T>{     
+    T Value { get; set; }   
+}    
+
+public class SomeClass : Base<SomeClass>{     
+    public SomeClass Value { get; set; }   
+} 
+```
+
+### 协变、逆变
+
+基类的变量赋值给派生类对象的实例 叫做赋值兼容性
+
+- 如果某个返回的类型可以由其派生类类型替换，那么这个类型就是支持协变的
+- 如果某个参数类型可以由其基类替换，那么这个类型就是支持逆变的
+
+
+
+- 协变就是父接口的泛型是只读的，用 out 关键字修饰即可
+- 逆变就是父接口的泛型是只写的，用 in 关键字继续是即可
+
+> 在C#4.0之前的泛型都是不支持协变和逆变的
+
+```csharp
+// 用 in 表示只写 
+public interface Base<in T>     
+{       
+    T Value { set; } 
+    // 不能声明 get     
+}      
+
+public class Sub<T> : Base<T>     
+{       
+    public T Value { get; set; }     
+}      
+
+private void Awake()     
+{       
+    // 完全合法       
+    Base<string> baseObject = new Sub<object>();        
+    baseObject.Value = "hello";      
+} 
+```
+
+```csharp
+public class GenericExample : MonoBehaviour   
+{     
+    public interface Base<out T>     
+    {          
+
+    }      
+
+    public class Sub<T> : Base<T>     
+    {          
+
+    }      
+
+    private void Awake()     
+    {       
+        // 完全合法 发生了协变       
+        Base<object> baseObject = new Sub<string>();     
+    }   
+} 
 ```
 
 ## 成员隐藏 Member Hiding
@@ -578,6 +762,8 @@ else
 ```
 
 ## 协程 Coroutines
+
+> Coroutine 其实是一个 迭代器模式 + 定时器的一种实现。
 
 **协同程序**：按时间间隔执行的函数，这类函数与特殊的`Yield`语句搭配使用，`Yield`语句从函数中返回代码执行，Then，当函数继续时，将从上次停止的地方开始执行
 
