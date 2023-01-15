@@ -118,6 +118,7 @@ const katex = require('rehype-katex');
             additionalLanguages: ['csharp'],
             additionalLanguages: ['cs'],
             additionalLanguages: ['lua'],
+	  additionalLanguages: ['python'],
         },
     }),
 });
