@@ -3,17 +3,17 @@ sidebar_position: 1
 
 ---
 
-## Python
+# Python
 
-### 交互模式
+## 交互模式
 
 ![image-20231002233722288](./src/image-20231002233722288.png)
 
 ![image-20231002234340495](./src/image-20231002234340495.png)
 
-### 基基基基本语法
+## 基基基基本语法
 
-#### math
+### math
 
 ```python
 import math
@@ -23,7 +23,7 @@ a**2
 math.log(8,2)
 ```
 
-#### 基本类型
+### 基本类型
 
 ```python
 # NoneType
@@ -42,7 +42,7 @@ t = True
 f = False
 ```
 
-#### input
+### input
 
 > 注意转换类型
 
@@ -53,7 +53,7 @@ print(age)
 print(int(age)+2)
 ```
 
-#### 判断
+### 判断
 
 ```python
 # if
@@ -72,7 +72,7 @@ if index%2==0 and index >=10:
     print('index能被2整除且大于10')
 ```
 
-#### List
+### List
 
 ```python
 # list
@@ -97,7 +97,7 @@ sorted_num = sorted(num_list)
 print('the max num is ',max_num, '\nthe min num is', min_num, '\nAfter sorted:', sorted_num)
 ```
 
-#### Dictionary
+### Dictionary
 
 ```python
 contacts = {'Alley': 15304379080,
@@ -114,7 +114,7 @@ print(contacts.values())	# 值
 print(contacts.items())		# 对
 ```
 
-#### Loop
+### Loop
 
 ```python
 # loop
@@ -137,7 +137,7 @@ while i<len(list):
 print(sum)
 ```
 
-#### Format
+### Format
 
 ```python
 # format
@@ -151,7 +151,117 @@ for name, gpa in gpa_dict.items():
     print('{current_name}\'s gpa is:{current_gpa}'.format(current_name = name, current_gpa = gpa))
 ```
 
+### Function
+
+```python
+def calculate_BMI(weight, height):
+    BMI = weight / height ** 2
+    if BMI < 18.5 :
+        category = "偏瘦"
+    elif BMI <= 25:
+        category = "正常"
+    elif BMI <= 30:
+        category = "偏胖"
+    else:
+        category = "肥胖"
+    print(f' Your BMI is {category}')
+    return category
+
+calculate_BMI(70, 1.9)
+```
+
+### OOP
+
+- 封装
+- 继承
+- 多态
+
+```python
+class CuteCat:
+    def __init__(self, cat_name, age, color):
+        self.color = color
+        self.age = age
+        self.cat_name = cat_name
+
+    def speak(self):
+        print('oh¬' * self.age)
+
+    def think(self, content):
+        print(f'{self.cat_name} is thinking {content}...')
 
 
-[Python函数（上） | 不做代码复读机_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1944y1x7SW?p=23&vd_source=26b03ede8b59579694c38f4220df6308)
+cat01 = CuteCat('NB', 12, 'white')
+cat01.speak()
+cat01.think('what the fuck?')
+```
 
+## File Operations
+
+> - 'a' 追加
+> - 'w' 写入
+> - 'r' 读取
+> - 'r+' 读写，若文件不存在，报错
+> - 'w+'读写，若文件不存在，创建
+
+### r
+
+```python
+f = open('./test.txt', 'r')
+line = f.readline()
+while line != "":
+    print(line)
+    line = f.readline()
+f.close()
+```
+
+```python
+f = open('./test.txt', 'r')
+lines = f.readlines()
+for line in lines:
+    print(line)
+f.close()
+```
+
+> with不需要close
+
+```python
+with open('./test.txt', 'r') as f:
+    print(f.read())
+```
+
+### w
+
+```python
+with open('./data.txt', 'w', encoding='utf-8') as f:
+    f.write("如果我是DJ\n")
+    f.write("你会爱我吗？")
+```
+
+### a 
+
+```python
+# 追加
+with open('./data.txt', 'a', encoding='utf-8') as f:
+    f.write("你会爱我吗!!!!!\n")
+    f.write("你会爱我吗!!!!!!!!!!!!!!")
+```
+
+## try-except
+
+![image-20231014163829562](./src/image-20231014163829562.png)
+
+## assert
+
+![image-20231014163916491](./src/image-20231014163916491.png)
+
+## unittest
+
+![image-20231014164241380](./src/image-20231014164241380.png)
+
+![image-20231014164721277](./src/image-20231014164721277.png)
+
+terminal input: 
+
+```bash
+$ python -m unittest
+```
